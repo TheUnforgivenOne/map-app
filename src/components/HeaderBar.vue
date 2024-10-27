@@ -17,7 +17,11 @@ const setLocale = (newLocale: string) => {
     ></v-app-bar-nav-icon>
 
     <v-app-bar-title>
-      {{ $t(`header.${$route.name?.toString()}Title`) }}
+      {{
+        $route.name?.toString()
+          ? $t(`header.${$route.name.toString()}Title`)
+          : ''
+      }}
     </v-app-bar-title>
 
     <v-btn>

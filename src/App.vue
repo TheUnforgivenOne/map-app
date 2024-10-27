@@ -16,12 +16,12 @@ import HeaderBar from './components/HeaderBar.vue';
 main {
   padding: 64px 8px 8px;
   margin: 0 auto;
-  max-width: 90vw;
+  width: 90vw;
 }
 
 @media (min-width: 1024px) {
   main {
-    max-width: 60vw;
+    width: 60vw;
   }
 }
 </style>
