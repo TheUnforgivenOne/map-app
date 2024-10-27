@@ -13,7 +13,7 @@ export const routes = [
   {
     path: Paths.ABOUT,
     name: 'about',
-    component: () => import('../views/HomeView.vue'),
+    component: () => import('../views/AboutView.vue'),
   },
   {
     path: Paths.MAP,
