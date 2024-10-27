@@ -18,7 +18,7 @@ export const routes = [
   {
     path: Paths.MAP,
     name: 'map',
-    component: () => import('../views/HomeView.vue'),
+    component: () => import('../views/MapView.vue'),
   },
 ];
 
