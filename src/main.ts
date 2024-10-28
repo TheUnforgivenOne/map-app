@@ -2,6 +2,8 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 
+import store, { key } from './store';
+
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
@@ -18,6 +20,7 @@ const vuetify = createVuetify({
 });
 
 app.use(router);
+app.use(store, key);
 app.use(vuetify);
 app.use(i18n);
 
