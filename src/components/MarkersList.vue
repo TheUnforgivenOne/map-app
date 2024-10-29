@@ -7,7 +7,11 @@ const store = useStore();
 
 <template>
   <h2 class="pt-4">Markers</h2>
-  <v-list>
+  <v-skeleton-loader
+    type="list-item"
+    v-if="store.state.marker.loading"
+  ></v-skeleton-loader>
+  <v-list class="list">
     <v-list-item
       v-for="marker in store.state.marker.list"
       :key="marker.id"
@@ -20,9 +24,20 @@ const store = useStore();
       <v-list-item-title>Marker {{ marker.id }}</v-list-item-title>
       <v-list-item-subtitle>lat: {{ marker.lat }}</v-list-item-subtitle>
       <v-list-item-subtitle>lng: {{ marker.lng }}</v-list-item-subtitle>
-      <v-list-item-subtitle>
+      <v-list-item-subtitle class="extended">
         address: {{ marker.address }}
       </v-list-item-subtitle>
     </v-list-item>
   </v-list>
 </template>
+
+<style scoped>
+.list {
+  overflow-y: scroll;
+  flex-grow: 1;
+}
+.extended {
+  -webkit-line-clamp: 10 !important;
+  line-clamp: 10 !important;
+}
+</style>

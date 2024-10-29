@@ -2,7 +2,12 @@
 import 'leaflet/dist/leaflet.css';
 import { computed, onMounted, onUnmounted, watch } from 'vue';
 import { useStore } from '@/store';
-import { DISPLAY_ALL_MARKERS, INIT_MAP, SET_MAP_MODE } from '@/store/actions';
+import {
+  DISPLAY_ALL_MARKERS,
+  GET_MARKERS,
+  INIT_MAP,
+  SET_MAP_MODE,
+} from '@/store/actions';
 import { CENTER_MAP, SET_MAP } from '@/store/mutations';
 import { MapMode, type IMarker } from '@/types';
 import type { LeafletMouseEvent } from 'leaflet';
@@ -18,9 +23,10 @@ const onMarkerClick = (_: LeafletMouseEvent, marker: IMarker) => {
   router.push(`${Paths.MAP}/${marker.id}`);
 };
 
-onMounted(() => {
+onMounted(async () => {
   store.dispatch(INIT_MAP, { mapContainerId: MAP_CONTAINER_ID });
-  store.dispatch(DISPLAY_ALL_MARKERS, { onMarkerClick });
+  await store.dispatch(GET_MARKERS);
+  await store.dispatch(DISPLAY_ALL_MARKERS, { onMarkerClick });
 });
 
 onUnmounted(() => {
@@ -73,7 +79,7 @@ const action = computed(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .wrapper {
   position: relative;
   height: 100%;

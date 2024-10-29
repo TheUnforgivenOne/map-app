@@ -8,6 +8,7 @@ export interface MapModuleState {
 
 export interface MarkerModuleState {
   list: IMarker[];
+  loading: boolean;
 }
 
 export interface RootState {

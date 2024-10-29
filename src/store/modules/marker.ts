@@ -2,48 +2,69 @@ import type { Module } from 'vuex';
 import L, { type LeafletMouseEvent } from 'leaflet';
 import type { INewMarker, IMarker } from '@/types';
 import type { RootState, MarkerModuleState } from '../stateTypes';
-import { CREATE_MARKER, DISPLAY_ALL_MARKERS, DISPLAY_MARKER } from '../actions';
-import { ADD_MARKER } from '../mutations';
-import genId from '@/utils/genId';
-// import router, { Paths } from '@/router';
+import {
+  CREATE_MARKER,
+  DISPLAY_ALL_MARKERS,
+  DISPLAY_MARKER,
+  GET_MARKERS,
+} from '../actions';
+import { ADD_MARKER, SET_LOADING_STATE, SET_MARKERS } from '../mutations';
+import FakeMarkerService from '@/services/FakeMarkerService';
+
+// list: [
+//   {
+//     id: 0,
+//     lat: 44.800011232919125,
+//     lng: 20.45516743193243,
+//     address: '',
+//   },
+//   {
+//     id: 1,
+//     lat: 44.793680273476724,
+//     lng: 20.46374572048381,
+//     address: '',
+//   },
+//   {
+//     id: 2,
+//     lat: 44.80755877674797,
+//     lng: 20.463059457399,
+//     address: '',
+//   },
+// ],
 
 const markerModule: Module<MarkerModuleState, RootState> = {
   state: {
-    list: [
-      {
-        id: 0,
-        lat: 44.800011232919125,
-        lng: 20.45516743193243,
-        address: '',
-      },
-      {
-        id: 1,
-        lat: 44.793680273476724,
-        lng: 20.46374572048381,
-        address: '',
-      },
-      {
-        id: 2,
-        lat: 44.80755877674797,
-        lng: 20.463059457399,
-        address: '',
-      },
-    ],
-  },
-
-  getters: {
-    getMarkerById(state, params: { id: number }) {
-      return state.list.find(({ id }) => id === params.id);
-    },
+    list: [],
+    loading: false,
   },
 
   mutations: {
+    [SET_MARKERS](state, payload: { markers: IMarker[] }) {
+      state.list = payload.markers;
+    },
+
     [ADD_MARKER](state, payload: { marker: IMarker }) {
       state.list.push(payload.marker);
+    },
+
+    [SET_LOADING_STATE](state, payload: boolean) {
+      state.loading = payload;
     },
   },
 
   actions: {
+    async [GET_MARKERS]({ commit }) {
+      commit(SET_LOADING_STATE, true);
+      try {
+        const markers = await FakeMarkerService.getAll();
+        commit(SET_MARKERS, { markers });
+        commit(SET_LOADING_STATE, false);
+      } catch (e) {
+        console.log(e);
+        commit(SET_LOADING_STATE, false);
+      }
+    },
+
     [DISPLAY_MARKER](
       { rootState },
       payload: {
@@ -81,26 +102,18 @@ const markerModule: Module<MarkerModuleState, RootState> = {
       });
     },
 
-    [CREATE_MARKER](
-      { commit, dispatch, state },
+    async [CREATE_MARKER](
+      { commit, dispatch },
       payload: {
         newMarkerValues: INewMarker;
         onMarkerClick: (e: LeafletMouseEvent, marker: IMarker) => void;
       },
     ) {
-      // Get address
+      const marker = await FakeMarkerService.create(payload.newMarkerValues);
 
-      const id = genId(state.list);
-      const newMarker: IMarker = {
-        id,
-        address: '',
-        ...payload.newMarkerValues,
-      };
-
-      // Save marker to localstorage
-      commit(ADD_MARKER, { marker: newMarker });
+      commit(ADD_MARKER, { marker });
       dispatch(DISPLAY_MARKER, {
-        marker: newMarker,
+        marker,
         onMarkerClick: payload.onMarkerClick,
       });
     },

@@ -5,7 +5,7 @@ import MarkersList from '@/components/MarkersList.vue';
 
 <template>
   <v-row class="ma-0 full-height">
-    <v-col cols="4" class="pa-0">
+    <v-col cols="4" class="pa-0 full-height d-flex flex-column">
       <MarkersList></MarkersList>
     </v-col>
     <v-col cols="8" class="pa-0">
