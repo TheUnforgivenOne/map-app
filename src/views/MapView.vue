@@ -1,59 +1,28 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
 import 'leaflet/dist/leaflet.css';
-import L, { type LeafletMouseEvent } from 'leaflet';
+import { onMounted, onUnmounted } from 'vue';
 import { useStore } from '@/store';
-import { type INewMarker } from '@/types';
+import { INIT_MAP } from '@/store/actions';
+import { SET_MAP } from '@/store/mutations';
 
+const mapContainerId = 'map';
 const store = useStore();
 
-// const displayMarker = (map: Map, { id, lat, lng }: IMarker) => {
-//   const marker = L.marker([lat, lng])
-//     .bindPopup(`id: ${id}, lat: ${lat}, lng: ${lng}`)
-//     .addTo(map);
-
-//   const h = (e: LeafletMouseEvent) => {
-//     console.log(e);
-//   };
-//   marker.on('click', h);
-// };
-
-const initMap = (mapContainerId: string) => {
-  const DEFAULT_TILE = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
-
-  const map = L.map(mapContainerId).setView([44.8, 20.45], 13);
-
-  L.tileLayer(DEFAULT_TILE, { maxZoom: 19 }).addTo(map);
-
-  const onMapClick = (e: LeafletMouseEvent) => {
-    const newMarker: INewMarker = {
-      ...e.latlng,
-      address: '',
-    };
-    store.dispatch('createMarker', newMarker);
-  };
-
-  map.on('click', onMapClick);
-
-  return map;
-};
-
 onMounted(() => {
-  const map = initMap('map');
-  store.commit('setMap', map);
+  store.dispatch(INIT_MAP, { mapContainerId });
+});
 
-  store.state.markers.forEach(marker => {
-    store.commit('displayMarker', marker);
-  });
+onUnmounted(() => {
+  store.commit(SET_MAP, { newMapRef: null });
 });
 </script>
 
 <template>
-  <v-container fluid class="pa-0 pt-2">
+  <v-container fluid class="pa-0 pt-3">
     <v-row>
-      <!-- <v-col cols="4">Points list</v-col> -->
-      <v-col>
-        <div id="map"></div>
+      <v-col cols="4" class="pa-0">Points list</v-col>
+      <v-col cols="8" class="pa-0">
+        <div :id="mapContainerId"></div>
       </v-col>
     </v-row>
   </v-container>
