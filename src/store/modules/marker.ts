@@ -1,10 +1,11 @@
 import type { Module } from 'vuex';
 import L, { type LeafletMouseEvent } from 'leaflet';
 import type { INewMarker, IMarker } from '@/types';
-import type { RootState, MarkerModuleState } from '../types';
+import type { RootState, MarkerModuleState } from '../stateTypes';
 import { CREATE_MARKER, DISPLAY_ALL_MARKERS, DISPLAY_MARKER } from '../actions';
 import { ADD_MARKER } from '../mutations';
 import genId from '@/utils/genId';
+// import router, { Paths } from '@/router';
 
 const markerModule: Module<MarkerModuleState, RootState> = {
   state: {
@@ -30,6 +31,12 @@ const markerModule: Module<MarkerModuleState, RootState> = {
     ],
   },
 
+  getters: {
+    getMarkerById(state, params: { id: number }) {
+      return state.list.find(({ id }) => id === params.id);
+    },
+  },
+
   mutations: {
     [ADD_MARKER](state, payload: { marker: IMarker }) {
       state.list.push(payload.marker);
@@ -37,7 +44,13 @@ const markerModule: Module<MarkerModuleState, RootState> = {
   },
 
   actions: {
-    [DISPLAY_MARKER]({ rootState }, payload: { marker: IMarker }) {
+    [DISPLAY_MARKER](
+      { rootState },
+      payload: {
+        marker: IMarker;
+        onMarkerClick: (e: LeafletMouseEvent, marker: IMarker) => void;
+      },
+    ) {
       const mapRef = rootState.map.ref;
       if (!mapRef) return;
 
@@ -49,22 +62,34 @@ const markerModule: Module<MarkerModuleState, RootState> = {
         )
         .addTo(mapRef);
 
-      const placeholder = (e: LeafletMouseEvent) => {
-        console.log(e);
-      };
-      marker.on('click', placeholder);
+      marker.on('click', (e: LeafletMouseEvent) =>
+        payload.onMarkerClick(e, payload.marker),
+      );
     },
 
-    [DISPLAY_ALL_MARKERS]({ state, dispatch }) {
+    [DISPLAY_ALL_MARKERS](
+      { state, dispatch },
+      payload: {
+        onMarkerClick: (e: LeafletMouseEvent, marker: IMarker) => void;
+      },
+    ) {
       state.list.forEach(marker => {
-        dispatch(DISPLAY_MARKER, { marker });
+        dispatch(DISPLAY_MARKER, {
+          marker,
+          ...payload,
+        });
       });
     },
 
     [CREATE_MARKER](
       { commit, dispatch, state },
-      payload: { newMarkerValues: INewMarker },
+      payload: {
+        newMarkerValues: INewMarker;
+        onMarkerClick: (e: LeafletMouseEvent, marker: IMarker) => void;
+      },
     ) {
+      // Get address
+
       const id = genId(state.list);
       const newMarker: IMarker = {
         id,
@@ -72,8 +97,12 @@ const markerModule: Module<MarkerModuleState, RootState> = {
         ...payload.newMarkerValues,
       };
 
+      // Save marker to localstorage
       commit(ADD_MARKER, { marker: newMarker });
-      dispatch(DISPLAY_MARKER, { marker: newMarker });
+      dispatch(DISPLAY_MARKER, {
+        marker: newMarker,
+        onMarkerClick: payload.onMarkerClick,
+      });
     },
   },
 };

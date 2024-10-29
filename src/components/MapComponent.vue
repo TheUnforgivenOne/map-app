@@ -1,40 +1,74 @@
 <script setup lang="ts">
 import 'leaflet/dist/leaflet.css';
-import { computed, onMounted, onUnmounted } from 'vue';
+import { computed, onMounted, onUnmounted, watch } from 'vue';
 import { useStore } from '@/store';
-import { INIT_MAP, SET_MAP_MODE } from '@/store/actions';
-import { SET_MAP } from '@/store/mutations';
-import { MapMode } from '@/types';
+import { DISPLAY_ALL_MARKERS, INIT_MAP, SET_MAP_MODE } from '@/store/actions';
+import { CENTER_MAP, SET_MAP } from '@/store/mutations';
+import { MapMode, type IMarker } from '@/types';
+import type { LeafletMouseEvent } from 'leaflet';
+import { useRoute, useRouter } from 'vue-router';
+import { Paths } from '@/router';
 
-const mapContainerId = 'map';
+const MAP_CONTAINER_ID = 'map';
 const store = useStore();
+const route = useRoute();
+const router = useRouter();
+
+const onMarkerClick = (_: LeafletMouseEvent, marker: IMarker) => {
+  router.push(`${Paths.MAP}/${marker.id}`);
+};
 
 onMounted(() => {
-  store.dispatch(INIT_MAP, { mapContainerId });
+  store.dispatch(INIT_MAP, { mapContainerId: MAP_CONTAINER_ID });
+  store.dispatch(DISPLAY_ALL_MARKERS, { onMarkerClick });
 });
 
 onUnmounted(() => {
+  store.state.map.ref?.off();
+  store.state.map.ref?.remove();
   store.commit(SET_MAP, { newMapRef: null });
 });
 
-const currentMode = computed(() => store.state.map.mode);
+watch(route, newRoute => {
+  const markerId = newRoute.params.markerId;
+  if (!markerId) return;
 
-const switchMapMode = () => {
-  const newMapMode =
-    currentMode.value === MapMode.View ? MapMode.Add : MapMode.View;
-  store.dispatch(SET_MAP_MODE, { newMapMode });
-};
+  const marker = store.state.marker.list.find(
+    ({ id }) => id === Number(markerId),
+  );
+
+  if (!marker) return;
+  store.commit(CENTER_MAP, { lat: marker.lat, lng: marker.lng });
+});
+
+const action = computed(() => {
+  return store?.state?.map?.mode === MapMode.Add
+    ? {
+        newMapMode: MapMode.View,
+        icon: 'mdi-map',
+      }
+    : {
+        newMapMode: MapMode.Add,
+        icon: 'mdi-plus-circle',
+      };
+});
 </script>
 
 <template>
   <div class="wrapper">
-    <div :id="mapContainerId" class="map"></div>
-    <v-btn size="8vh" icon class="btn" @click.prevent="switchMapMode">
-      <v-icon
-        size="8vh"
-        color="blue"
-        :icon="currentMode === MapMode.View ? 'mdi-plus-circle' : 'mdi-map'"
-      ></v-icon>
+    <div :id="MAP_CONTAINER_ID" class="map"></div>
+    <v-btn
+      icon
+      size="6vh"
+      class="btn"
+      @click="
+        store.dispatch(SET_MAP_MODE, {
+          newMapMode: action.newMapMode,
+          onMarkerClick,
+        })
+      "
+    >
+      <v-icon size="6vh" color="blue" :icon="action.icon"></v-icon>
     </v-btn>
   </div>
 </template>

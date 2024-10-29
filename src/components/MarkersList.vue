@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Paths } from '@/router';
 import { useStore } from '@/store';
 
 const store = useStore();
@@ -10,10 +11,11 @@ const store = useStore();
     <v-list-item
       v-for="marker in store.state.marker.list"
       :key="marker.id"
-      @click="e => console.log(e)"
+      :active="Number($route.params.markerId) === marker.id"
       border
       rounded
       class="ma-1"
+      @click="$router.push(`${Paths.MAP}/${marker.id}`)"
     >
       <v-list-item-title>Marker {{ marker.id }}</v-list-item-title>
       <v-list-item-subtitle>lat: {{ marker.lat }}</v-list-item-subtitle>

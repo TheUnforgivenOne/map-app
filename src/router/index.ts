@@ -1,11 +1,15 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {
+  createRouter,
+  createWebHistory,
+  type RouteRecordRaw,
+} from 'vue-router';
 
-const Paths = {
+export const Paths = {
   ABOUT: '/about',
   MAP: '/map',
 };
 
-export const routes = [
+export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     redirect: Paths.ABOUT,
@@ -16,7 +20,7 @@ export const routes = [
     component: () => import('../views/AboutView.vue'),
   },
   {
-    path: Paths.MAP,
+    path: `${Paths.MAP}/:markerId?`,
     name: 'map',
     component: () => import('../views/MapView.vue'),
   },

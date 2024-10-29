@@ -22,7 +22,7 @@ main {
 
 @media (min-width: 1024px) {
   main {
-    width: 80vw;
+    width: 70vw;
   }
 }
 </style>
