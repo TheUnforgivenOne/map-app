@@ -17,11 +17,12 @@ main {
   padding: 64px 8px 8px;
   margin: 0 auto;
   width: 90vw;
+  height: 100vh;
 }
 
 @media (min-width: 1024px) {
   main {
-    width: 60vw;
+    width: 80vw;
   }
 }
 </style>

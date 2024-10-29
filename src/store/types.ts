@@ -12,5 +12,5 @@ export interface MarkerModuleState {
 
 export interface RootState {
   map: MapModuleState;
-  markers: MarkerModuleState;
+  marker: MarkerModuleState;
 }
