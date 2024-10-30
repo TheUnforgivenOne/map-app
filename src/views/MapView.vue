@@ -21,26 +21,21 @@ import MarkersList from '@/components/MarkersList.vue';
 }
 
 .markers-list-wrapper {
-  display: flex;
-  flex-direction: column;
   height: 100%;
   width: 30%;
+}
+
+@media (max-width: 1024px) {
+  .map-view-wrapper {
+    flex-direction: column;
+  }
+  .markers-list-wrapper {
+    height: 30%;
+    width: 100%;
+  }
 }
 
 .map-wrapper {
   flex-grow: 1;
 }
-
-.full-height {
-  height: 100%;
-}
 </style>
-
-<!-- <v-row class="full-height ma-0">
-    <v-col cols="4" class="full-height d-flex flex-column pa-0">
-      <MarkersList></MarkersList>
-    </v-col>
-    <v-col cols="8" class="pa-0">
-      <MapComponent></MapComponent>
-    </v-col>
-  </v-row> -->

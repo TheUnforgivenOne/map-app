@@ -6,7 +6,6 @@ const store = useStore();
 </script>
 
 <template>
-  <h2 class="pt-4">Markers</h2>
   <v-skeleton-loader
     type="list-item"
     v-if="store.state.marker.loading"
@@ -34,7 +33,7 @@ const store = useStore();
 <style scoped>
 .list {
   overflow-y: scroll;
-  flex-grow: 1;
+  height: 100%;
 }
 .extended {
   -webkit-line-clamp: 10 !important;
