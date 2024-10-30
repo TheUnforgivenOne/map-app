@@ -6,6 +6,7 @@ import L, {
   type Map,
 } from 'leaflet';
 import AbstractProvider from './AbstractProvider';
+import markerPath from '../assets/marker-icon.png';
 
 const DEFAULT_TILE = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const DEFAULT_ZOOM = 14;
@@ -94,7 +95,9 @@ class OSM extends AbstractProvider {
 
     const { id, lat, lng, address } = marker;
 
-    const leafletMarker = L.marker([lat, lng])
+    const leafletMarker = L.marker([lat, lng], {
+      icon: L.icon({ iconUrl: markerPath }),
+    })
       .bindPopup(
         `<div>id: ${id}</div><div>lat: ${lat}</div><div>lng: ${lng}</div><div>${address}</div>`,
       )
