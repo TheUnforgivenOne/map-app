@@ -92,11 +92,11 @@ class OSM extends AbstractProvider {
     // Handle case if marker already on the map
     if (this.leafletMarkers?.[marker.id]) return;
 
-    const { id, lat, lng } = marker;
+    const { id, lat, lng, address } = marker;
 
     const leafletMarker = L.marker([lat, lng])
       .bindPopup(
-        `<div>id: ${id}</div><div>lat: ${lat}</div><div>lng: ${lng}</div>`,
+        `<div>id: ${id}</div><div>lat: ${lat}</div><div>lng: ${lng}</div><div>${address}</div>`,
       )
       .addTo(this.map);
 

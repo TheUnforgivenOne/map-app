@@ -62,6 +62,12 @@ const i18n = createI18n({
       map: {
         marker: 'Marker',
         address: 'address',
+        noMarkers: 'No marksers yet',
+      },
+      notification: {
+        error: 'Error',
+        success: 'Success',
+        markerCreated: 'New marker created',
       },
     },
     ru: {
@@ -118,6 +124,12 @@ const i18n = createI18n({
       map: {
         marker: 'Маркер',
         address: 'адрес',
+        noMarkers: 'Маркеров нет',
+      },
+      notification: {
+        error: 'Ошибка',
+        success: 'Успех',
+        markerCreated: 'Новый маркер создан',
       },
     },
   },

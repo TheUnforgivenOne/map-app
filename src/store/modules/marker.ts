@@ -9,6 +9,8 @@ import {
   SET_MARKERS,
 } from '../mutations';
 import FakeMarkerService from '@/services/FakeMarkerService';
+import { notify } from '@kyvg/vue3-notification';
+import i18n from '@/i18n';
 
 const markerModule: Module<MarkerModuleState, RootState> = {
   state: {
@@ -45,8 +47,13 @@ const markerModule: Module<MarkerModuleState, RootState> = {
         commit(SET_MARKERS, { markers });
         commit(SET_LOADING_STATE, RequestState.Ready);
       } catch (e) {
-        console.log(e);
         commit(SET_LOADING_STATE, RequestState.Error);
+
+        notify({
+          type: 'error',
+          title: 'Error',
+          text: (e as Error).message,
+        });
       }
     },
 
@@ -61,9 +68,20 @@ const markerModule: Module<MarkerModuleState, RootState> = {
 
         commit(ADD_MARKER, { marker });
         commit(SET_CREATING_STATE, RequestState.Ready);
+
+        notify({
+          type: 'success',
+          title: i18n.global.t('notification.success'),
+          text: i18n.global.t('notification.markerCreated'),
+        });
       } catch (e) {
-        console.log(e);
         commit(SET_CREATING_STATE, RequestState.Error);
+
+        notify({
+          type: 'error',
+          title: i18n.global.t('notification.error'),
+          text: (e as Error).message,
+        });
       }
     },
   },

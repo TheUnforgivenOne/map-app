@@ -17,7 +17,16 @@ onMounted(() => {
     type="list-item"
     v-if="store.state.marker.loadingMarkers === RequestState.Loading"
   ></v-skeleton-loader>
-  <v-list class="h-100 overflow-y-auto">
+  <div
+    v-if="
+      store.state.marker.loadingMarkers === RequestState.Ready &&
+      !store.state.marker.list.length
+    "
+    class="ma-2"
+  >
+    {{ $t('map.noMarkers') }}
+  </div>
+  <v-list v-else class="h-100 overflow-y-auto">
     <v-list-item
       v-for="marker in store.state.marker.list"
       :key="marker.id"

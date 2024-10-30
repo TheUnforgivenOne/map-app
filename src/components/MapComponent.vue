@@ -79,10 +79,16 @@ const action = computed(() => {
 <template>
   <div class="position-relative h-100 w-100">
     <div :id="MAP_CONTAINER_ID" class="h-100"></div>
+    <v-progress-circular
+      v-if="store.state.marker.creatingMarker === RequestState.Loading"
+      color="primary"
+      indeterminate
+      class="position-absolute creating-loader"
+    ></v-progress-circular>
     <v-btn
       icon
       size="6vh"
-      class="position-absolute action-btn-position"
+      class="position-absolute action-btn"
       @click="store.commit(SET_MAP_MODE, { newMapMode: action.newMapMode })"
     >
       <v-icon size="6vh" color="blue" :icon="action.icon"></v-icon>
@@ -91,7 +97,13 @@ const action = computed(() => {
 </template>
 
 <style scoped>
-.action-btn-position {
+.creating-loader {
+  top: 50%;
+  left: 50%;
+  z-index: 1000;
+}
+
+.action-btn {
   right: 4vw;
   bottom: 4vh;
   z-index: 1000;

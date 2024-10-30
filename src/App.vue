@@ -10,6 +10,7 @@ import HeaderBar from './components/HeaderBar.vue';
       <RouterView />
     </main>
   </v-app>
+  <notifications position="bottom right" />
 </template>
 
 <style>
