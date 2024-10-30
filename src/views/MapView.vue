@@ -4,11 +4,11 @@ import MarkersList from '@/components/MarkersList.vue';
 </script>
 
 <template>
-  <div class="map-view-wrapper">
+  <div class="d-flex map-view-wrapper">
     <div class="markers-list-wrapper">
       <MarkersList></MarkersList>
     </div>
-    <div class="map-wrapper">
+    <div class="flex-grow-1">
       <MapComponent></MapComponent>
     </div>
   </div>
@@ -16,7 +16,6 @@ import MarkersList from '@/components/MarkersList.vue';
 
 <style scoped>
 .map-view-wrapper {
-  display: flex;
   height: 100%;
 }
 
@@ -33,9 +32,5 @@ import MarkersList from '@/components/MarkersList.vue';
     height: 30%;
     width: 100%;
   }
-}
-
-.map-wrapper {
-  flex-grow: 1;
 }
 </style>

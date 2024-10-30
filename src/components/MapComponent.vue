@@ -61,12 +61,12 @@ const action = computed(() => {
 </script>
 
 <template>
-  <div class="wrapper">
-    <div :id="MAP_CONTAINER_ID" class="map"></div>
+  <div class="position-relative h-100 w-100">
+    <div :id="MAP_CONTAINER_ID" class="h-100"></div>
     <v-btn
       icon
       size="6vh"
-      class="btn"
+      class="position-absolute btn-position"
       @click="
         store.dispatch(SET_MAP_MODE, {
           newMapMode: action.newMapMode,
@@ -80,21 +80,9 @@ const action = computed(() => {
 </template>
 
 <style scoped>
-.wrapper {
-  position: relative;
-  height: 100%;
-  width: 100%;
-}
-
-.map {
-  height: 100%;
-}
-
-.btn {
-  position: absolute;
+.btn-position {
   right: 4vw;
   bottom: 4vh;
   z-index: 1000;
-  min-width: 0;
 }
 </style>

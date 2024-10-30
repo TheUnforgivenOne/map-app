@@ -6,7 +6,7 @@ import HeaderBar from './components/HeaderBar.vue';
 <template>
   <v-app>
     <HeaderBar />
-    <main>
+    <main class="pt-16 px-2 mx-auto">
       <RouterView />
     </main>
   </v-app>
@@ -14,9 +14,7 @@ import HeaderBar from './components/HeaderBar.vue';
 
 <style>
 main {
-  padding: 64px 8px 8px;
-  margin: 0 auto;
-  width: 90vw;
+  width: 80vw;
   height: 100vh;
 }
 

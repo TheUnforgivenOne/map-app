@@ -10,7 +10,7 @@ const store = useStore();
     type="list-item"
     v-if="store.state.marker.loading"
   ></v-skeleton-loader>
-  <v-list class="list">
+  <v-list class="h-100 overflow-y-auto">
     <v-list-item
       v-for="marker in store.state.marker.list"
       :key="marker.id"
@@ -23,7 +23,7 @@ const store = useStore();
       <v-list-item-title>Marker {{ marker.id }}</v-list-item-title>
       <v-list-item-subtitle>lat: {{ marker.lat }}</v-list-item-subtitle>
       <v-list-item-subtitle>lng: {{ marker.lng }}</v-list-item-subtitle>
-      <v-list-item-subtitle class="extended">
+      <v-list-item-subtitle class="extended-address">
         address: {{ marker.address }}
       </v-list-item-subtitle>
     </v-list-item>
@@ -31,11 +31,7 @@ const store = useStore();
 </template>
 
 <style scoped>
-.list {
-  overflow-y: scroll;
-  height: 100%;
-}
-.extended {
+.extended-address {
   -webkit-line-clamp: 10 !important;
   line-clamp: 10 !important;
 }
