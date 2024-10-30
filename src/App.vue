@@ -20,9 +20,9 @@ main {
   height: 100vh;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
   main {
-    width: 70vw;
+    width: 60vw;
   }
 }
 </style>

@@ -4,18 +4,43 @@ import MarkersList from '@/components/MarkersList.vue';
 </script>
 
 <template>
-  <v-row class="ma-0 full-height">
-    <v-col cols="4" class="pa-0 full-height d-flex flex-column">
+  <div class="map-view-wrapper">
+    <div class="markers-list-wrapper">
+      <MarkersList></MarkersList>
+    </div>
+    <div class="map-wrapper">
+      <MapComponent></MapComponent>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.map-view-wrapper {
+  display: flex;
+  height: 100%;
+}
+
+.markers-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 30%;
+}
+
+.map-wrapper {
+  flex-grow: 1;
+}
+
+.full-height {
+  height: 100%;
+}
+</style>
+
+<!-- <v-row class="full-height ma-0">
+    <v-col cols="4" class="full-height d-flex flex-column pa-0">
       <MarkersList></MarkersList>
     </v-col>
     <v-col cols="8" class="pa-0">
       <MapComponent></MapComponent>
     </v-col>
-  </v-row>
-</template>
-
-<style>
-.full-height {
-  height: 100%;
-}
-</style>
+  </v-row> -->

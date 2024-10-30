@@ -1,13 +1,20 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { Paths } from '@/router';
 import i18n, { type AvailableLocalesType } from '@/i18n';
-import { ref } from 'vue';
-import { routes } from '@/router';
+
+const route = useRoute();
 
 const navDrawerOpen = ref(false);
 
 const setLocale = (newLocale: string) => {
   i18n.global.locale.value = newLocale as AvailableLocalesType;
 };
+
+const currentRouteName = computed(() => {
+  return route.name?.toString() ?? '';
+});
 </script>
 
 <template>
@@ -17,11 +24,7 @@ const setLocale = (newLocale: string) => {
     ></v-app-bar-nav-icon>
 
     <v-app-bar-title>
-      {{
-        $route.name?.toString()
-          ? $t(`header.${$route.name.toString()}Title`)
-          : ''
-      }}
+      {{ $t(`header.${currentRouteName}Title`) }}
     </v-app-bar-title>
 
     <v-btn>
@@ -44,15 +47,12 @@ const setLocale = (newLocale: string) => {
 
   <v-navigation-drawer v-model="navDrawerOpen">
     <v-list>
-      <template v-for="route in routes" :key="route.path">
-        <v-list-item
-          v-if="route.component"
-          :to="route.path"
-          :active="route.name === $route.name?.toString()"
-        >
-          {{ $t(`header.${route.name}Title`) }}
-        </v-list-item>
-      </template>
+      <v-list-item :to="Paths.ABOUT" :active="currentRouteName === 'about'">{{
+        $t('header.aboutTitle')
+      }}</v-list-item>
+      <v-list-item :to="Paths.MAP" :active="currentRouteName === 'map'">{{
+        $t('header.mapTitle')
+      }}</v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
