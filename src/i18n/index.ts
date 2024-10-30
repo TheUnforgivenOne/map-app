@@ -59,6 +59,10 @@ const i18n = createI18n({
         },
         example: 'Example:',
       },
+      map: {
+        marker: 'Marker',
+        address: 'address',
+      },
     },
     ru: {
       header: {
@@ -110,6 +114,10 @@ const i18n = createI18n({
           mentionTitle: 'Напоминание:',
         },
         example: 'Пример:',
+      },
+      map: {
+        marker: 'Маркер',
+        address: 'адрес',
       },
     },
   },

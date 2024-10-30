@@ -20,11 +20,13 @@ const store = useStore();
       class="ma-1"
       @click="$router.push(`${Paths.MAP}/${marker.id}`)"
     >
-      <v-list-item-title>Marker {{ marker.id }}</v-list-item-title>
-      <v-list-item-subtitle>lat: {{ marker.lat }}</v-list-item-subtitle>
-      <v-list-item-subtitle>lng: {{ marker.lng }}</v-list-item-subtitle>
+      <v-list-item-title>
+        <b>{{ $t('map.marker') }} {{ marker.id }}</b>
+      </v-list-item-title>
+      <v-list-item-subtitle><b>lat:</b> {{ marker.lat }}</v-list-item-subtitle>
+      <v-list-item-subtitle><b>lng:</b> {{ marker.lng }}</v-list-item-subtitle>
       <v-list-item-subtitle class="extended-address">
-        address: {{ marker.address }}
+        <b>{{ $t('map.address') }}:</b> {{ marker.address }}
       </v-list-item-subtitle>
     </v-list-item>
   </v-list>
