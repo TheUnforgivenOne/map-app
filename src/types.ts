@@ -3,6 +3,13 @@ export enum MapMode {
   Add = 'Add',
 }
 
+export enum RequestState {
+  Initial = 'Initial',
+  Loading = 'Loading',
+  Ready = 'Ready',
+  Error = 'Error',
+}
+
 export interface INewMarker {
   lat: number;
   lng: number;

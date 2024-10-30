@@ -1,54 +1,70 @@
 <script setup lang="ts">
 import 'leaflet/dist/leaflet.css';
-import { computed, onMounted, onUnmounted, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useStore } from '@/store';
-import {
-  DISPLAY_ALL_MARKERS,
-  GET_MARKERS,
-  INIT_MAP,
-  SET_MAP_MODE,
-} from '@/store/actions';
-import { CENTER_MAP, SET_MAP } from '@/store/mutations';
-import { MapMode, type IMarker } from '@/types';
-import type { LeafletMouseEvent } from 'leaflet';
-import { useRoute, useRouter } from 'vue-router';
+
+import OSM from '@/mapProviders/OSM';
+import type AbstractProvider from '@/mapProviders/AbstractProvider';
+import { SET_MAP_MODE } from '@/store/mutations';
+import { CREATE_MARKER } from '@/store/actions';
+import { MapMode, RequestState } from '@/types';
 import { Paths } from '@/router';
 
 const MAP_CONTAINER_ID = 'map';
-const store = useStore();
-const route = useRoute();
+
 const router = useRouter();
+const route = useRoute();
+const store = useStore();
 
-const onMarkerClick = (_: LeafletMouseEvent, marker: IMarker) => {
-  router.push(`${Paths.MAP}/${marker.id}`);
-};
+const mapProvider = ref<AbstractProvider | null>(null);
 
-onMounted(async () => {
-  store.dispatch(INIT_MAP, { mapContainerId: MAP_CONTAINER_ID });
-  await store.dispatch(GET_MARKERS);
-  await store.dispatch(DISPLAY_ALL_MARKERS, { onMarkerClick });
+onMounted(() => {
+  mapProvider.value = new OSM(MAP_CONTAINER_ID);
 });
 
 onUnmounted(() => {
-  store.state.map.ref?.off();
-  store.state.map.ref?.remove();
-  store.commit(SET_MAP, { newMapRef: null });
+  mapProvider.value?.cleanUp();
 });
+
+const onMarkerClick = (markerId: number) => {
+  router.push(`${Paths.MAP}/${markerId}`);
+};
+
+const onMapClick = (lat: number, lng: number) => {
+  store.dispatch(CREATE_MARKER, { newMarkerValues: { lat, lng } });
+};
+
+watch(store.state.marker, ({ list, loadingMarkers }) => {
+  if (loadingMarkers === RequestState.Ready) {
+    list.forEach(marker => {
+      mapProvider.value?.displayMarker(marker);
+      mapProvider.value?.setMarkerOnClick(marker.id, onMarkerClick);
+    });
+  }
+});
+
+watch(
+  () => store.state.map.mode,
+  newMapMode => {
+    if (newMapMode === MapMode.Add) {
+      mapProvider.value?.setMapOnClick(onMapClick);
+      return;
+    } else {
+      mapProvider.value?.unsetMapOnClick();
+    }
+  },
+);
 
 watch(route, newRoute => {
   const markerId = newRoute.params.markerId;
   if (!markerId) return;
 
-  const marker = store.state.marker.list.find(
-    ({ id }) => id === Number(markerId),
-  );
-
-  if (!marker) return;
-  store.commit(CENTER_MAP, { lat: marker.lat, lng: marker.lng });
+  mapProvider.value?.centerMap(Number(markerId));
 });
 
 const action = computed(() => {
-  return store?.state?.map?.mode === MapMode.Add
+  return store.state.map.mode === MapMode.Add
     ? {
         newMapMode: MapMode.View,
         icon: 'mdi-map',
@@ -66,13 +82,8 @@ const action = computed(() => {
     <v-btn
       icon
       size="6vh"
-      class="position-absolute btn-position"
-      @click="
-        store.dispatch(SET_MAP_MODE, {
-          newMapMode: action.newMapMode,
-          onMarkerClick,
-        })
-      "
+      class="position-absolute action-btn-position"
+      @click="store.commit(SET_MAP_MODE, { newMapMode: action.newMapMode })"
     >
       <v-icon size="6vh" color="blue" :icon="action.icon"></v-icon>
     </v-btn>
@@ -80,7 +91,7 @@ const action = computed(() => {
 </template>
 
 <style scoped>
-.btn-position {
+.action-btn-position {
   right: 4vw;
   bottom: 4vh;
   z-index: 1000;

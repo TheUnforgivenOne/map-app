@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { Paths } from '@/router';
+import { onMounted } from 'vue';
 import { useStore } from '@/store';
+import { GET_MARKERS } from '@/store/actions';
+import { Paths } from '@/router';
+import { RequestState } from '@/types';
 
 const store = useStore();
+
+onMounted(() => {
+  store.dispatch(GET_MARKERS);
+});
 </script>
 
 <template>
   <v-skeleton-loader
     type="list-item"
-    v-if="store.state.marker.loading"
+    v-if="store.state.marker.loadingMarkers === RequestState.Loading"
   ></v-skeleton-loader>
   <v-list class="h-100 overflow-y-auto">
     <v-list-item
