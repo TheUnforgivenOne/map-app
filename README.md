@@ -1,5 +1,7 @@
 # Map
 
+Try it: http://vlad-map-app.s3-website-eu-west-1.amazonaws.com
+
 ## Local run
 
 1. `yarn install` - install dependencies
