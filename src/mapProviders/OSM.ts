@@ -96,7 +96,7 @@ class OSM extends AbstractProvider {
     const { id, lat, lng, address } = marker;
 
     const leafletMarker = L.marker([lat, lng], {
-      icon: L.icon({ iconUrl: markerPath }),
+      icon: L.icon({ iconUrl: markerPath, iconAnchor: [13, 41] }),
     })
       .bindPopup(
         `<div>id: ${id}</div><div>lat: ${lat}</div><div>lng: ${lng}</div><div>${address}</div>`,
